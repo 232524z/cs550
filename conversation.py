@@ -1,4 +1,4 @@
-"""Ian Haile
+"""Ian
 9/6/19
 this program has a conversation with this user
 Sources: https://www.geeksforgeeks.org/string-find-python/
