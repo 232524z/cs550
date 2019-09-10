@@ -1,4 +1,9 @@
 """
+Ian
+9/10/19
+this program sums the sin^2 and cos^2 for an entered number
+it also calculates the distance given points on a
+cartesian coordinate plane
 1
 when computing force = g*mass1*mass2/radius*radius,
 the computer does not see that both radii are under the
