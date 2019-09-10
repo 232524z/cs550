@@ -4,6 +4,7 @@ Ian
 this program calculates the wind chill for a given
 temperature and wind speed.
 sources: worksheet with formula
+OMH
 """
 
 t = float(input("t="))
