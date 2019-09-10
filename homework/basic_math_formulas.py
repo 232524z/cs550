@@ -13,6 +13,7 @@ a change to the program would be:
 force=(g*mass1*mass2)/(radius*radius)
 an alternative would be
 force=g*mass1*mass2/radius/radius
+OMH
 """
 #2
 import math
