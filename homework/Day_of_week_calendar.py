@@ -1,20 +1,18 @@
 """
 Ian
-9/11/19
+9/12/19
 this program calculates the day of the week for a given
 day, month, and year.
-sources: http://mathforum.org/dr.math/faq/faq.calendar.html
-I received help from Kai and Will Greive
+sources: Worksheet with formula
 OMH
 
 """
-import math
-m_input = int(input("month: "))
-k = int(input("\nday: "))
-year = input("\nyear: ")
-m=(m_input+10)%12
-c = int(year[0]+year[1])
-d = int(year[2]+year[3])
+m = int(input("month: "))
+d = int(input("\nday: "))
+y = int(input("\nyear: "))
 
-dayOfWeek=math.floor((k+((13*m-1)/5+d+(d/4)+(c/4)-2*c))%7)
-print(dayOfWeek)
+y0=(y-(14-m)//12)
+x=(y0 + y0//4 -y0//100 + y0//400)
+m0=(m+12*((14-m)//12)-2)
+d0=(d+x+(31*m0//12))%7
+print(d0)
