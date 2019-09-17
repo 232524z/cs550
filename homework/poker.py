@@ -6,6 +6,7 @@ https://snakify.org/en/lessons/two_dimensional_lists_arrays/
 
 '''
 import random
+money = []
 deck = []
 #creates arrays of deck = []
 hands = []
@@ -17,7 +18,8 @@ for s in suits:
 		deck.append(str(i)+s)
 #gets number of opponents
 playerNumber = 1+int(input('how many opponents?\n'))
-
+for i in range(0,playerNumber):
+	money.append(1500)
 
 
 def shuffle():
@@ -65,13 +67,10 @@ def displayCards():
 	print("\n\nTable\n",publicCards)
 
 
-shuffle()
-dealHand()
-deal3()
-deal1()
-deal1()
-displayCards()
-
+def ShowOptions:
+	choice = input("Fold	","Check	","Call",amountRaised,"		Raise")
+	if "r" in choice:
+		amountRaised = int(input("How much do you want to raise?\n")
 
 
 
