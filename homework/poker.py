@@ -15,14 +15,53 @@ class Opponent:
 		self.bluff = False
 		self.handQuality = 0
 
+
 	def give(self, card):
 		self.hand.append(card)
 	def lose(self, ammount):
 		self.money -= ammount
 	def gain(self, ammount):
 		self.money += amount
-	def calcQ():
-		handQuality = 0
+	def calcQh(self):
+		#gets the number of the card without suite
+		card1value = int(self.hand[0].split()[0])
+		card1suite = self.hand[0].split(str(card1value))[1]
+		card2value = int(self.hand[1].split()[0])
+		card2suite = self.hand[1].split(str(card2value))[1]
+		#makes a starting hand quality value based on numbers
+		handQuality = card2value+card1value
+		#each potentially good quality doubles hand quality e.g. pair, potential straight, potential flush etc.
+		if abs(card1value-card2value) <=4:
+			handQuality*=2
+		if card1value == card2value:
+			handQuality*=2
+		#compaiers suits of cards
+		if card1suite == card2suite:
+			handQuality*=2
+		print(handQuality)
+	def calcQ3(self):
+		card1value = int(self.hand[0].split()[0])
+		card1suite = self.hand[0].split(str(card1value))[1]
+		card2value = int(self.hand[1].split()[0])
+		card2suite = self.hand[1].split(str(card2value))[1]
+		#makes a starting hand quality value based on numbers
+		handQuality = card2value+card1value
+		#each potentially good quality doubles hand quality e.g. pair, potential straight, potential flush etc.
+		if abs(card1value-card2value) <=4:
+			handQuality*=2
+		if card1value == card2value:
+			handQuality*=2
+		#compaiers suits of cards
+		if card1suite == card2suite:
+			handQuality*=2
+		for i in range(0,3):
+			if abs(card1value-publicCardsValue[i])<3:
+				handQuality*=2
+			if publicCardsSuite[i]==card1suite or publicCardsSuite[i]==card2suite:
+				handQuality*=2
+		print(handQuality)
+
+
 
 
 
@@ -43,6 +82,9 @@ player = Player()
 deck = []
 #creates the array for cards on the table
 publicCards = []
+
+publicCardsValue = []
+publicCardsSuite = []
 
 
 #creates deck
@@ -84,6 +126,9 @@ def collectCards():
 		deck.append(ai[i].hand[0])
 		deck.append(ai[i].hand[1])
 		ai[i].hand.clear()
+	#clears public card suites and values
+	publicCardsSuite.clear()
+	publicCardsValue.clear()
 
 
 def dealHand():
@@ -111,7 +156,10 @@ def deal3():
 	#deal 3
 	for i in range(0,3):
 		publicCards.append(deck[0])
+		publicCardsValue.append(int(deck[0].split()[0]))
+		publicCardsSuite.append(deck[0].split(str(publicCardsValue[i]))[1])
 		deck.pop(0)
+
 
 def deal1():
 	#burn 1
@@ -119,6 +167,8 @@ def deal1():
 	deck.pop(0)
 	#deal 1
 	publicCards.append(deck[0])
+	publicCardsValue.append(int(deck[0].split()[0]))
+	publicCardsSuite.append(deck[0].split(str(publicCardsValue[i]))[1])
 	deck.pop(0)
 
 def displayCards():
@@ -157,18 +207,15 @@ def Raise():
 '''
 def gameplay():
 	shuffle()
-	dealHand()
-	displayCards()
-	deal3()
-	displayCards()
-	deal1()
-	displayCards()
-	deal1()
-	displayCards()
 
-gameplay()
-
-
+shuffle()
+dealHand()
+deal3()
+print(publicCards)
+for i in range(0, playerNumber):
+	ai[i].calcQh()
+	ai[i].calcQ3()
+	print(ai[i].hand)
 
 
 
