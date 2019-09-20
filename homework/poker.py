@@ -23,30 +23,39 @@ class Opponent:
 		global tableMoney
 		global amountRaised
 		if self.bluff == True:
-			self.willBet = (random.randint(0,self.money/5)+self.money)*(1/2)
-		if self.handQuality < 15:
-			self.willBet = 0
-			self.inRound = False
-		elif self.handQuality>2000:
-			self.willBet = (random.randint(0,self.money/5)+self.money)*(3/4)
+			self.willBet = (random.randint(0,round(self.money/5))+self.money)*(1/2)
 		else:
-			self.willBet = self.money*(self.handQuality/3000)
+			if len(publicCards) == 0:
+				if self.handQuality < 5:
+					self.willBet = 0
+					self.inRound = False
+				elif self.handQuality>100:
+					self.willBet = (random.randint(0,round(self.money/5))+self.money)*(3/4)
+				else:
+					self.willBet = self.money*(self.handQuality/3000)
+
+			if len(publicCards) == 5:
+				if self.handQuality < 150:
+					self.willBet = 0
+					self.inRound = False
+				elif self.handQuality>2000:
+					self.willBet = (random.randint(0,(self.money/5))+self.money)*(3/4)
+				else:
+					self.willBet = self.money*(self.handQuality/3000)
 
 
 	def bet(self, name):
 		global amountRaised
 		betThisRound = self.willBet*(random.randint(8,12))/10
-		if self.inRound == False:
-			print("Player",name,"folded")
-		else:
+		if self.inRound == True and amountRaised:
 			if amountRaised==0:
 				self.lose((3/4)*betThisRound)
-				amountRaised = (3/4)*betThisRound
+				amountRaised = round((3/4)*betThisRound)
 				print("Player",name,"raised",amountRaised)
 			elif amountRaised < self.willBet:
 				self.lose(amountRaised)
 				print("Player",name,"called")
-			else:
+			elif self.inRound == True:
 				self.inRound = False
 				print("Player",name,"folded")
 
@@ -54,11 +63,13 @@ class Opponent:
 		self.hand.append(card)
 
 	def lose(self, amount):
+		amount = round(amount)
 		self.money -= amount
 		global tableMoney
 		tableMoney += amount
 
 	def gain(self, amount):
+		amount = round(amount)
 		self.money += amount
 
 	def calcQ(self, Round):
@@ -136,9 +147,8 @@ deck = []
 publicCards = []
 publicCardsValue = []
 publicCardsSuite = []
-
+playerRaised = False
 tableMoney = 0
-
 amountRaised = 0
 playerNumber = 0
 #creates deck
@@ -253,12 +263,10 @@ def showOptions():
 			fold()
 			break
 		elif choice == "check":
-			if amountRaised==0:
-				check()
-			else:
+			if amountRaised!=0:
 				print("Can't check. Automatically calling",amountRaised)
 				call()
-			break
+				break
 		elif choice == "call":
 			call()
 			break
@@ -274,27 +282,38 @@ def fold():
 	ai[winner].give(tableMoney)
 	tableMoney = 0
 	print("Player",str(winner+1),"Wins!")
-'''
-#player checks
-def check():
-	#check
 
 def call(): 
-	#call
+	global tableMoney
+	global amountRaised
+	player.money-=amountRaised
+	tableMoney+=amountRaised
 
 def Raise():
-	#raise
-'''
+	global playerRaised
+	playerRaised = True
+
 def gameplay():
+	global amountRaised
+	global playerRaised
 	startup()
 	shuffle()
 	dealHand()
-	for i in range(playerNumber):
-		ai[i].calcQ(1)
-		ai[i].betCalc()
-		ai[i].bet(i+1)
-	showOptions()
-
+	if playerRaised == True:
+		playerRaised = False
+		for i in range(playerNumber):
+			ai[i].calcQ(1)
+			ai[i].betCalc()
+			ai[i].bet(i+1)
+		showOptions()
+	if playerRaised == True:
+		playerRaised = False
+		for i in range(playerNumber):
+			ai[i].calcQ(1)
+			ai[i].betCalc()
+			ai[i].bet(i+1)
+		showOptions()
+	exit()
 gameplay()
 
 
