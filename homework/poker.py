@@ -10,7 +10,7 @@ Spencer
 import random
 
 class Opponent:
-	def __init__(self):
+	def __init__(self, pos):
 		self.hand = []
 		self.handNumbers =[]
 		self.money = 1500
@@ -18,6 +18,8 @@ class Opponent:
 		self.handQuality = 0
 		self.willBet = 0
 		self.inRound = True
+		self.pos = pos
+		self.amountSpent = 0
 #determines how much to bet
 	def betCalc(self):
 		global tableMoney
@@ -46,15 +48,21 @@ class Opponent:
 
 	def bet(self, name):
 		global amountRaised
+		global playersChecked
+		global userRaised
 		betThisRound = self.willBet*(random.randint(8,12))/10
-		if self.inRound == True and amountRaised:
-			if amountRaised==0:
+		if self.inRound == True:
+			if amountRaised==0 and self.amountSpent == 0:
 				self.lose((3/4)*betThisRound)
 				amountRaised = round((3/4)*betThisRound)
 				print("Player",name,"raised",amountRaised)
-			elif amountRaised < self.willBet:
+				playersChecked = 0
+				playerRaised = self.pos
+				userRaised = False
+			elif amountRaised < self.willBet and amountRaised != 0:
 				self.lose(amountRaised)
 				print("Player",name,"called")
+				playersChecked+=1
 			elif self.inRound == True:
 				self.inRound = False
 				print("Player",name,"folded")
@@ -67,6 +75,7 @@ class Opponent:
 		self.money -= amount
 		global tableMoney
 		tableMoney += amount
+		self.amountSpent += amount
 
 	def gain(self, amount):
 		amount = round(amount)
@@ -134,6 +143,7 @@ class Player:
 	money = 1500
 	def __init__(self):
 		self.hand = []
+		self.amountSpent = 0
 	def give(self, card):
 		self.hand.append(card)
 
@@ -147,10 +157,12 @@ deck = []
 publicCards = []
 publicCardsValue = []
 publicCardsSuite = []
-playerRaised = False
 tableMoney = 0
 amountRaised = 0
 playerNumber = 0
+playerRaised = 0
+playersChecked = 0
+userRaised = False
 #creates deck
 suits = [' of hearts',' of spades',' of diamonds',' of clubs']
 for s in suits:
@@ -178,7 +190,7 @@ def startup():
 			print("Please enter an integer!")
 	for i in range(playerNumber):
 	#adds opponets to the ai array
-		ai.append(Opponent())
+		ai.append(Opponent(i))
 
 #shuffles deck
 def shuffle():
@@ -278,6 +290,7 @@ def showOptions():
 #player folds
 def fold():
 	global tableMoney
+	global playersChecked
 	winner = highHand()
 	ai[winner].give(tableMoney)
 	tableMoney = 0
@@ -286,35 +299,74 @@ def fold():
 def call(): 
 	global tableMoney
 	global amountRaised
+	playersChecked = 0
 	player.money-=amountRaised
 	tableMoney+=amountRaised
+	player.amountSpent = amountRaised
+	playersChecked +=1
+	amountRaised=0
 
 def Raise():
-	global playerRaised
-	playerRaised = True
+	global tableMoney
+	global amountRaised
+	global playersChecked
+	response = int(input("How much do you want to raise?\n"))
+	amountRaised = response
+	playersChecked = 0
+	player.money -= response
+	tableMoney += response
+	userRaised = True
+
 
 def gameplay():
 	global amountRaised
-	global playerRaised
+	global playersChecked
+	global playerNumber
+	playersFolded = 0
 	startup()
 	shuffle()
 	dealHand()
-	if playerRaised == True:
-		playerRaised = False
+	while True:
+		playersFolded = 0
 		for i in range(playerNumber):
 			ai[i].calcQ(1)
 			ai[i].betCalc()
 			ai[i].bet(i+1)
+			if playersChecked == playerNumber-1:
+				break
+
+			if ai[i].inRound == False:
+				playersFolded += 1
+			if playersFolded >= playerNumber:
+				break
+		if userRaised == True:
+			amountRaised = 0
 		showOptions()
-	if playerRaised == True:
-		playerRaised = False
-		for i in range(playerNumber):
-			ai[i].calcQ(1)
-			ai[i].betCalc()
-			ai[i].bet(i+1)
-		showOptions()
-	exit()
+		if playersChecked == playerNumber+1:
+			break
+	print('done')
+
 gameplay()
+'''
+Note: The game does not work
+Comments:
+
+Spencer: Game broke when I put in 999999999999 for the amount of opponents I wanted
+Please fix
+
+Stanley: Do a restart thing where the player is given the option to restart the game. 
+
+
+Kate: I was a little confused on how to play this, maybe you could add
+instructions? I know it's a draft though so no worries! I like the
+green text + black background, very eye-catching!
+
+Nicole: I think you should give the option of reading the rules of how to play blackjack. Also it was a bit unclear what to type when "Fold Check Call Raise" appeared so maybe in parenthesis saying to type either of those words down would be helpful.
+
+Ting: I agree with some people from above, make sure to include instructions. Other than that, you're really close to finishing the game.
+
+Chandler: I don't know how to play poker so I can give absolutely no input on this game
+Except maybe to add instructions. But it looks cool!
 
 
 
@@ -325,5 +377,4 @@ gameplay()
 
 
 
-
-
+'''
