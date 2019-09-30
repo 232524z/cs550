@@ -1,4 +1,8 @@
 '''
+Ian
+OMH
+9/29/19
+This program plays poker with the user. It only plays one round at a time. Some of the rules of the game have been altered slightly, but it still maintains the feel of texas hold'em poker
 sources:https://www.programiz.com/python-programming/methods/string/strip
 https://www.w3schools.com/python/python_lists.asp
 https://pynative.com/python-random-shuffle/
@@ -9,6 +13,8 @@ Spencer
 '''
 import random
 
+#class for the ai
+
 class Opponent:
 	def __init__(self, pos):
 		self.hand = []
@@ -18,19 +24,21 @@ class Opponent:
 		self.willBet = 0
 		self.inRound = True
 		self.pos = pos
+
 #determines how much to bet
 	def betCalc(self):
 		global tableMoney
 		global amountRaised
 		if len(publicCards) == 0:
-			self.willBet = 5*(random.randint(0,10))+self.handQuality
+			self.willBet = 10*(random.randint(0,10))+self.handQuality
 		elif len(publicCards) == 3:
-			self.willBet = 15*(random.randint(0,10))+5*self.handQuality
+			self.willBet = 30*(random.randint(0,10))+5*self.handQuality
 		elif len(publicCards) >=4:
-			self.willBet =15*(random.randint(0,10))+10*self.handQuality
+			self.willBet =30*(random.randint(0,10))+10*self.handQuality
 		while(self.willBet>self.money):
 			self.willBet*(3/4)
 
+#bets
 	def bet(self, name):
 		global playersFolded
 		global amountRaised
@@ -44,7 +52,7 @@ class Opponent:
 				playersChecked = 0
 				playerRaised = self.pos
 				userRaised = False
-			elif amountRaised < self.willBet:
+			elif amountRaised < 5*(self.willBet):
 				if self.willBet/1.3 > amountRaised:
 					self.lose((3/4)*self.willBet)
 					amountRaised += (round((3/4)*self.willBet)-amountRaised)
@@ -60,23 +68,27 @@ class Opponent:
 				self.inRound = False
 				print("Player",name+1,"folded")
 				playersFolded += 1
-		if self.handQuality > 2000:
-			self.handQuality = 2000
+		
 
+#receives a card
 	def give(self, card):
 		self.hand.append(card)
 
+#loses money
 	def lose(self, amount):
 		amount = round(amount)
 		self.money -= amount
 		global tableMoney
 		tableMoney += amount
 
+#gains money
 	def gain(self, amount):
 		amount = round(amount)
 		self.money += amount
 
+#calculates the quality of a hand
 	def calcQ(self, Round):
+		#splits up the suites and values of both cards
 		card1value = int(self.hand[0].split()[0])
 		card1suite = self.hand[0].split(str(card1value))[1]
 		card2value = int(self.hand[1].split()[0])
@@ -131,7 +143,10 @@ class Opponent:
 			#pair/three of a kind/four of a kind/full house
 			if publicCardsValue[4]==card1suite or publicCardsValue[i]==card2value:
 					self.handQuality*=8
+		if self.handQuality > 2000:
+			self.handQuality = 2000
 
+#class for player
 class Player:
 	money = 1500
 	def __init__(self):
@@ -142,6 +157,7 @@ class Player:
 	def give(self, card):
 		self.hand.append(card)
 
+#hand quality used if it goes to the last round of betting
 	def calcQ(self):
 		Round = 5
 		card1value = int(self.hand[0].split()[0])
@@ -209,12 +225,19 @@ deck = []
 publicCards = []
 publicCardsValue = []
 publicCardsSuite = []
+#money on the table
 tableMoney = 0
+#amount raised
 amountRaised = 0
+#number of ai
 playerNumber = 0
+#which player raised
 playerRaised = 0
+#how many players checked
 playersChecked = 0
+#if the user raised
 userRaised = False
+#how many players folded
 playersFolded = 0
 #creates deck
 suits = [' of hearts',' of spades',' of diamonds',' of clubs']
@@ -232,7 +255,11 @@ def startup():
 			break
 		else:
 			play = input("Please enter Yes or No!\n").strip().lower()
-	
+	rules = input("Do you want to see the rules first?\n").strip().lower()
+	if rules[0] != "n":
+		if rules[0]!='y':
+			print("Assumed you wanted to see the rules.")
+		print("This game is texas hold'em poker. Each player is dealt 2 cards. players then bet. after this round of betting, 3 cards are dealt on the table, and more betting ensues, followed by 2 rounds of dealing 1 card and betting. The goal of the game is to construct the best 5 card hand out of the 7 total cards, while getting your opponents to put in the most money. Alternatively, you can bluff to get your opponents to fold. But be careful, they could be doing the same to you! For precies rules on hands, please consult the internet. In general, matching things = good. E.g. cards of the same number, the same suit, in a row, ...")
 	#gets number of opponents
 	while True:
 		global playerNumber
@@ -319,9 +346,12 @@ def highHand():
 
 #show player cards
 def displayCards():
+	#shows cards
 	print("\nYour Hand\n",player.hand)
 	print("\n\nTable\n",publicCards)
+	#shows layers money
 	print("\nMoney:",player.money)
+	#shows ai's money
 	for i in range(playerNumber):
 		print("\nPlayer",(i+1),"'s money:",ai[i].money)
 	print("\n")
@@ -335,12 +365,20 @@ def showOptions():
 			fold()
 			break
 		elif choice == "check":
+			#if it can check, does nothing
+
+			#sees if the player can check
 			if amountRaised!=0:
 				print("Can't check. Automatically calling",amountRaised)
 				call()
 				break
 		elif choice == "call":
-			call()
+			#sees if the player can call
+			if player.money < amountRaised:
+				"You can't afford that! you lose this round."
+				fold()
+			else:
+				call()
 			break
 		elif choice == "raise":
 			Raise()
@@ -351,6 +389,7 @@ def showOptions():
 def fold():
 	global tableMoney
 	global playersChecked
+	#takes the ai with the best hand, and makes them the winner
 	winner = highHand()
 	ai[winner].give(tableMoney)
 	tableMoney = 0
@@ -360,8 +399,10 @@ def call():
 	global tableMoney
 	global amountRaised
 	global playersChecked
+	#adds the player's money to the table, and removes it from their account
 	player.money-=amountRaised
 	tableMoney+=amountRaised
+	#adds to the players who haven't raised
 	playersChecked +=1
 
 def Raise():
@@ -369,9 +410,23 @@ def Raise():
 	global amountRaised
 	global playersChecked
 	response = int(input("How much do you want to raise?\n"))
+	#checks if the player can raise that amount
 	if response<amountRaised:
-		print("Not enough! Automatically checking")
+		#sees if the player can call
+		if amountRaised>player.money:
+			print("Not enough! Automatically calling")
+			call()
+		else:
+			print("You ran out of money! You lose this round")
+			fold()
+	elif response > player.money:
+		print("You can't afford that!")
+		if amountRaised < player.money:
+			print("Automatically calling")
+			call()
+		else: print("You ran out of money! You lose this round")
 	else:
+		#actually raises
 		amountRaised = response-amountRaised
 		playersChecked = 0
 		player.money -= response
@@ -381,17 +436,17 @@ def Raise():
 
 def playRound():
 	global playerNumber
+	#shows cards and money
 	displayCards()
 	for i in range(playerNumber):
 		ai[i].betCalc()
 		ai[i].bet(i)
+	#ai bet
+	#if everyone hasn't folded, player goes
 	if playersFolded != playerNumber:
 		showOptions()
+	#if one of the middle ai raised, the rest have to call before the round is over
 	if amountRaised != 0 and userRaised == False:
-		for i in range(playerRaised):
-			ai[i].betCalc()
-			ai[i].bet(i)
-	if playerRaised != 0:
 		for i in range(playerRaised):
 			ai[i].betCalc()
 			ai[i].bet(i)
@@ -401,10 +456,11 @@ def playRound():
 
 
 def getReadyForNextRound():
+	#resets variables
 	playersChecked = 0
 	userRaised = False
 	amountRaised = 0
-	print()
+
 def gameplay():
 	global playersChecked
 	global userRaised
@@ -416,12 +472,16 @@ def gameplay():
 		dealHand()
 		playRound()
 		getReadyForNextRound()
+		#if all ai folded, player wins
 		if playersFolded == playerNumber:
 			print("You won this round!")
 			break
-		deal3()
+		
+		#playing next round
 		playRound()
+		deal3()
 		getReadyForNextRound()
+		playRound()
 		if playersFolded == playerNumber:
 			print("You won this round!")
 			break
@@ -433,36 +493,39 @@ def gameplay():
 			break
 		deal1(4)
 		playRound()
+		#if some ai are still in the round, goes through the process of determining the winner
 		if playersFolded != playerNumber:
 			winnerlist = [0,0]
 			for i in range(playerNumber):
+				#calculates how good everyone's hand is
 				ai[i].calcQ(5)
 			for i in range(playerNumber):
+				#if the hand is better, sets that value as index 0, and the ai's name(number) as index 1
 				if ai[i].handQuality> winnerlist[0]:
 					winnerlist.clear()
 					winnerlist.append(ai[i].handQuality)
 					winnerlist.append(ai[i].pos)
+			#calculates quality of player's hand
 			player.calcQ()
+			#if the best ai is better than the user
 			if winnerlist[0]>player.handQuality:
 				print("Player",(winnerlist[1]+1),"won!")
 				ai[winnerlist[1]].money += tableMoney
 				tableMoney = 0
 			else:
 				print("You won this round!")
-				player.hand += tableMoney
+				player.money += tableMoney
 				tableMoney = 0
 		if playersFolded == playerNumber:
 			print("You won this round!")
 		break
-			
 
 
 
 
 gameplay()
 '''
-Note: The game does not work
-Comments:
+
 
 Spencer: Game broke when I put in 999999999999 for the amount of opponents I wanted
 Please fix
