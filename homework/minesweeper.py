@@ -1,7 +1,7 @@
 #Ian
 #OMH
 #10/13/19
-#This program is a text based minesweeper game.
+#This program is a text based minesweeper game. This program uses recursion rather than a list to calculate the zeros. I chose to do this so that the code would be much simpler and easy to understand. At first, I started out making the board without gutters, but I quickly realized that I would drown in if statements if I continued on that path, so a switched to a with gutters board. I added a lot of error checking because I enjoyed playing the game, but while I was testing I would often forget a space, accedently type a letter, or do something else that would crash the program, and end the game preamtivly. While it is still possible to crash the program, most common errors have been fixed. One other issue I ran into while programming this was how to accept the coordinates. Years of math have taught me (x,y), but yet matrixes are defined row by column, or (y,x). I found that the most natural thing for me was (x,y), which made some things more confusing, but I thing in the end the program is more intuitive.
 #Sources: Spencer
 
 import random
@@ -40,8 +40,6 @@ def printboard_debug(board):
 
 #displays a given board to the user
 def printboard(board):
-	#clears the window so that only 1 board is visable
-	clear()
 	#prints numbers at the top of the board
 	print("   ", end=' ')
 	for i in range(1,width-1):
@@ -179,6 +177,8 @@ def gameplay():
 		print("\n\n")
 	print()
 	while True:
+		#clears the window so that only 1 board is visable
+		clear()
 		#shows the board
 		printboard(showboard)
 		#gets an action
@@ -187,7 +187,6 @@ def gameplay():
 		if gameover == True:
 			gameOver()
 			break
-		print("\n\n")
 
 #sets the recursion limit to 20,000 so that the code can be much more concise by using recursion
 sys.setrecursionlimit(20000)
