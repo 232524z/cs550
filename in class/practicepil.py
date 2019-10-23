@@ -1,7 +1,7 @@
 from PIL import Image
 import math
-dimx = 100
-dimy = 100
+dimx = 800
+dimy = 800
 
 file = Image.new("RGB",(dimx,dimy))
 
@@ -32,12 +32,12 @@ def flip(c):
 		return 0
 	return 255
 
-# def checker(c):
-# 	for y in range(0,dimy,round(dimy/8)):
-# 	    for x in range(0,dimx,round(dimx/8)):
-# 	      c = flip(c)
-# 	      rect(x, y, x+round(dimx/8)-1, y+round(dimy/8)-1, c)
-# 	    c = flip(c)
+def checker(c):
+	for y in range(0,800,100):
+		for x in range(0,800,100):
+			c = flip(c)
+			rect(x, y, x+100, y+100, c)
+		c = flip(c)
 	  
-grad()
+checker(255)
 file.save("demo_image.png","PNG")
