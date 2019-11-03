@@ -57,7 +57,7 @@ dimx, dimy = 1000, 1000
 #range of mandelbrot
 xmin,xmax,ymin,ymax = -.04268973253251546,-.042678548183545745, -.9899397662400176, -.9899285829010478
 #max number if iterations of the mandelbrot function
-maxIt = 2000
+maxIt = 1000
 #makes the picture
 purplemandel = Image.new("RGB",(dimx,dimy))
 #sets the recursion limit so that maxIt will never hit it
