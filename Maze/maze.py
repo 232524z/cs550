@@ -3,17 +3,23 @@ from point import point
 from PIL import Image,ImageDraw
 from progressbar import progressbar as bar
 
-dimx=100
-dimy=100
+dimx,dimy=100,100
+boarderWidth = 5
+mazeDimx,mazeDimy=dimx-boarderWidth*2,dimy-boarderWidth*2
 maze = Image.new("RGB",(dimx,dimy))
 
-difficulty = 500
+difficulty = 1500
 vlist = []
 clist = []
 
-def createv(diff,x,y,l):
+def createv(diff,w,x,y,l):
 	for i in range(diff):
-		l.append(point(random.randint(0,x),random.randint(0,y)))
+		l.append(point(random.randint(w,x),random.randint(w,y)))
+		for j in l:
+			while l[i].distance(j) < 20:
+				l.pop(-1)
+				l.append(point(random.randint(w,x),random.randint(w,y)))
+
 
 def connect(a,b,file):
 	draw = ImageDraw.Draw(file)
@@ -31,8 +37,7 @@ def nearest(a,b):
 				smallestI = [i,j]
 	return smallestI[1],[a[smallestI[0]],b[smallestI[1]]]
 
-createv(difficulty,dimx,dimy,vlist)
-maze.putpixel(vlist[0].tuple(),(0,255,0))
+createv(difficulty,boarderWidth,mazeDimx,mazeDimy,vlist)
 clist.append(vlist[0])
 vlist.pop(0)
 
@@ -42,4 +47,5 @@ for i in bar(range(difficulty-1)):
 	vlist.pop(closest[0])
 	connect(closest[1][0],closest[1][1],maze)
 maze.putpixel(clist[-1].tuple(),(0,255,0))
+maze.putpixel(clist[0].tuple(),(0,255,0))
 maze.save("maze.png","PNG")

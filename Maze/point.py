@@ -5,6 +5,7 @@ class point:
 
 	def tuple(self):
 		return (self.x,self.y)
+		
 	def __str__(self):
 		return str((self.x,self.y))
 
