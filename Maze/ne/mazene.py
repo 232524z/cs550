@@ -1,74 +1,146 @@
+#Ian
+#11/18/19
+#Sources:Spencer, https://www.tutorialspoint.com/python3/python_dictionary.htm
+
 import random
 from pointne import point
-from PIL import Image,ImageDraw
+from PIL import Image, ImageDraw
 from progressbar import progressbar as bar
 
-dimx,dimy=100,100
-boarderWidth = 1
-mazeDimx,mazeDimy=dimx-boarderWidth*2,dimy-boarderWidth*2
-maze = Image.new("RGB",(dimx,dimy))
 
-difficulty = 500
-vlist = []
-clist = []
+def createv():
+	global vertexlist
+	#creates vertices for every point on the grid, including gutters
+	vertexlist=[[point(x,y) for x in range(dimx+2)] for y in range(dimy+2)]
 
-def createv(diff,w,x,y,l):
-	for i in range(diff):
-		l.append(point(random.randint(w,x),random.randint(w,y),random.randint(0,100)))
-		for j in l:
-			while l[i].distance(j) < dimx/25:
-				l.pop(-1)
-				l.append(point(random.randint(w,x),random.randint(w,y),random.randint(0,100)))
-
-
-def connect(a,b,file):
-	draw = ImageDraw.Draw(file)
-	draw.line(((a.x,a.y),(b.x,a.y)),(255,0,0))
-	draw.line(((b.x,a.y),(b.x,b.y)),(255,0,0))
-
-def nearest(a,b):
-	smallestD = 100000
-	smallestI = [0,0]
-	lowest = 10000
-	ind = 0
-	for i in range(len(b)):
-		if lowest > b[i].weight:
-			lowest = b[i].weight
-			ind = i
-	for i in range(len(a)):
-		d = a[i].distance(b[ind])
-		if smallestD > d:
-			smallestD = d
-			smallestI = [i,ind]
-	return smallestI[1],[a[smallestI[0]],b[smallestI[1]]]
-
-def drawLines():
-	for i in bar(range(difficulty-1)):
-		closest = nearest(clist,vlist)
-		clist.append(closest[1][1])
-		vlist.pop(closest[0])
-		connect(closest[1][0],closest[1][1],maze)
-
-def choosePoints():
-	l = [0,100000]
-	for i in range(len(clist)):
-		if clist[i].distance(point(0,0)) < l[1]:
-			l = [i,clist[i].distance(point(0,0))]
-	maze.putpixel(clist[l[0]].tuple(),(0,255,0))
-	r = [0,100000]
-	for i in range(len(clist)):
-		if clist[i].distance(point(dimx,dimy)) < r[1]:
-			r = [i,clist[i].distance(point(dimx,dimy))]
-	maze.putpixel(clist[r[0]].tuple(),(0,255,0))
+	#makes the gutters be counted so they don't interfere later
+	for i in range(dimx):
+		vertexlist[0][i].counted = True
+		vertexlist[dimy-1][i].counted = True
+		vertexlist[0][i].gutter = True
+		vertexlist[dimy-1][i].gutter = True
+	for i in range(dimy):
+		vertexlist[i][0].counted = True
+		vertexlist[i][dimx-1].counted = True
+		vertexlist[i][0].gutter = True
+		vertexlist[i][dimx-1].gutter = True
 
 
 
-createv(difficulty,boarderWidth,mazeDimx,mazeDimy,vlist)
-clist.append(vlist[0])
-vlist.pop(0)
+def createE():
+	global edgedic
+	for i in range(dimx):
+		for j in range(dimy):
+			#for every edge, generates a random weight and adds it to a dictionary. The coordinates of the start point followed by the endpoint is the key.
+			edgedic[((i,j),(i+1,j))]=random.random()
+			edgedic[((i,j),(i,j+1))]=random.random()
 
 
-drawLines()
-choosePoints()
+
+def lowest1(x,y):
+	#list for the potential edges to reveal
+	l = []
+
+	#if the points above, below, to the left, and right are not yet counted, adds the connecting edges
+	if vertexlist[x+1][y].counted == False:
+		l.append(((x,y),(x+1,y)))
+	if vertexlist[x-1][y].counted == False:
+		l.append(((x,y),(x-1,y)))
+	if vertexlist[x][y+1].counted == False:
+		l.append(((x,y),(x,y+1)))
+	if vertexlist[x][y-1].counted == False:
+		l.append(((x,y),(x,y-1)))
+
+	#s is the best contendor for the lowest value. The first number is the index in the list l, the second number is the weight of the edge.
+	s = [0,1000]
+	for i in range(len(l)):
+		w = 0
+		try:
+			w = edgedic[l[i]]
+		except:
+			pass
+		if w< s[1]:
+			s = [i,w]
+	#if there is a lowest value, returns the edge, and its weight
+	if s != [0,1000]:
+		return l[s[0]],s[1]
+	return None
+
+
+
+
+def lowestAll():
+	counted = []
+	for i in range(len(vertexlist)):
+		for j in range(len(vertexlist[i])):
+			if vertexlist[i][j].counted and vertexlist[i][j].gutter == False:
+				counted.append(vertexlist[i][j])
+
+	s = [0,1000]
+	for i in range(len(counted)):
+		w = lowest1(counted[i].x,counted[i].y)
+		if w[1]< s[1]:
+			s = w
+	print(s)
+	if s != [0,1000]:
+		a,b = s[0][1][0],s[0][1][1]
+		x,y = s[0][0][0],s[0][0][1]
+		draw.line(((x*2,y*2),(a*2,b*2)),(255,0,0))
+		vertexlist[x][y].counted = True
+
+
+
+
+
+
+
+# def reveal(x,y):
+# 	global vertexlist
+# 	vertexlist[x][y].counted = True
+# 	l = []
+
+# 	if vertexlist[x+1][y].counted == False:
+# 		l.append((x,y),(x+1,y))
+# 	if vertexlist[x-1][y].counted == False:
+# 		l.append((x,y),(x-1,y))
+# 	if vertexlist[x][y+1].counted == False:
+# 		l.append((x,y),(x,y+1))
+# 	if vertexlist[x][y-1].counted == False:
+# 		l.append((x,y),(x,y-1))
+
+# 	s = [0,1000]
+# 	for i in range(len(l)):
+# 		w = edgedic[l[i]]
+# 		if w< s[1]:
+# 			s = [i,w]
+# 	if s != [0,1000]:
+# 		a,b=l[s[0]][0][0],l[s[0]][0][1]
+# 		draw.line(((x*2,y*2),(a*2,b*2)),(255,0,0))
+# 		reveal(l[s[0]][0],l[s[0]][1])
+
+
+
+
+
+
+
+dimx,dimy=10,10
+maze = Image.new("RGB",(dimx*2,dimy*2))
+draw = ImageDraw.Draw(maze)
+vertexlist = []
+edgedic = {}
+needrev = []
+
+
+
+createv()
+createE()
+vertexlist[1][1].counted = True
+for i in range(len(vertexlist)):
+	lowestAll()
+
+
+
+
 
 maze.save("mazene.png","PNG")

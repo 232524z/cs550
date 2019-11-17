@@ -10,5 +10,7 @@ class point:
 		return str((self.x,self.y))
 
 	def distance(self, other):
-		distance = (((self.x-other.x)**2)+((self.y-other.y)**2))
+		dif1 = self.x-other.x
+		dif2 = self.y-other.y
+		distance = (dif1*dif1)+(dif2*dif2)
 		return distance
