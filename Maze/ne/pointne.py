@@ -9,9 +9,8 @@ class point:
 		return (self.x,self.y)
 		
 	def __str__(self):
-		if self.counted == False:
-			return "0"
-		return "1"
+		
+		return str((self.x,self.y))
 
 	def distance(self, other):
 		distance = (((self.x-other.x)**2)+((self.y-other.y)**2))
