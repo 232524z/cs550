@@ -10,24 +10,24 @@ from progressbar import progressbar as bar
 def createv():
 	global vertexlist
 	#creates vertices for every point on the grid, including gutters
-	vertexlist=[[point(x,y) for y in range(dimy+2)] for x in range(dimx+2)]
+	vertexlist=[[point(x,y) for y in range(gridy+2)] for x in range(gridx+2)]
 
 	#makes the gutters be counted so they don't interfere later
-	for i in range(dimx):
+	for i in range(gridx):
 		vertexlist[0][i].counted = True
-		vertexlist[dimy-1][i].counted = True
+		vertexlist[gridy-1][i].counted = True
 		vertexlist[0][i].gutter = True
-		vertexlist[dimy-1][i].gutter = True
-	for i in range(dimy):
+		vertexlist[gridy-1][i].gutter = True
+	for i in range(gridy):
 		vertexlist[i][0].counted = True
-		vertexlist[i][dimx-1].counted = True
+		vertexlist[i][gridx-1].counted = True
 		vertexlist[i][0].gutter = True
-		vertexlist[i][dimx-1].gutter = True
+		vertexlist[i][gridx-1].gutter = True
 
 def createE():
 	global edgedic
-	for i in range(dimx):
-		for j in range(dimy):
+	for i in range(gridx):
+		for j in range(gridy):
 			#for every edge, generates a random weight and adds it to a dictionary. The coordinates of the start point followed by the endpoint is the key.
 			edgedic[((i,j),(i+1,j))]=random.random()
 			edgedic[((i,j),(i,j+1))]=random.random()
@@ -81,13 +81,13 @@ def lowestAll():
 	if s != [0,1000]:
 		a,b = s[0][1][0],s[0][1][1]
 		x,y = s[0][0][0],s[0][0][1]
-		draw.line(((x*2,y*2),(a*2,b*2)),(255,0,0))
+		draw.line(((x*2,y*2),(a*2,b*2)),(255,255,255))
 		vertexlist[a][b].counted = True
 
 
-
-dimx,dimy=100,100
-maze = Image.new("RGB",(dimx*2,dimy*2))
+gridx,gridy = 20,20
+dimx,dimy=gridx*2-1,gridy*2-1
+maze = Image.new("RGB",(dimx,dimy))
 draw = ImageDraw.Draw(maze)
 vertexlist = []
 edgedic = {}
@@ -100,6 +100,7 @@ createE()
 vertexlist[1][1].counted = True
 for i in bar(range(len(vertexlist)*len(vertexlist[0]))):
 	lowestAll()
-
+maze.putpixel((2,2),(255,0,0))
+maze.putpixel((dimx-3,dimy-3),(255,0,0))
 
 maze.save("mazene.png","PNG")
