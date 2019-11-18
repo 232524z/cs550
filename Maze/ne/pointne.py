@@ -1,3 +1,4 @@
+#custom class point. It holds the x and y coordinates for a point, along with wether or not the point has been counted in the maze generation algorithm, and wether it is part of the gutters
 class point:
 	def __init__(self,x,y):
 		self.x = x
@@ -5,13 +6,6 @@ class point:
 		self.counted = False
 		self.gutter = False
 
-	def tuple(self):
-		return (self.x,self.y)
-		
+	#returns the coordinates when a string is required. Used for debugging
 	def __str__(self):
-		
 		return str((self.x,self.y))
-
-	def distance(self, other):
-		distance = (((self.x-other.x)**2)+((self.y-other.y)**2))
-		return distance

@@ -63,9 +63,6 @@ def lowest1(x,y):
 		return potentialEdges[smallest[0]],smallest[1]
 	return None
 
-
-
-
 def lowestAll():
 	global vertexlist
 	#the list of all points that have been counted
@@ -96,8 +93,9 @@ def lowestAll():
 		#countes the endpont of the edge
 		vertexlist[a][b].counted = True
 
+
 #grid is used for the grid of points, dim is used for the picture
-gridx,gridy = 50,50
+gridx,gridy = 200,200
 dimx,dimy=gridx*2-1,gridy*2-1
 
 maze = Image.new("RGB",(dimx,dimy))
@@ -118,6 +116,7 @@ vertexlist[1][1].counted = True
 #Every point must be counted, so this reveals edges and counts points the same number of times as the total number of points. Since vertexlist is a two dimensional list, the total number of points is the width * height
 for i in bar(range(len(vertexlist)*len(vertexlist[0]))):
 	lowestAll()
+
 #sets the start and enpoint to red
 maze.putpixel((2,2),(255,0,0))
 maze.putpixel((dimx-3,dimy-3),(255,0,0))
