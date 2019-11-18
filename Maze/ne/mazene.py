@@ -37,7 +37,7 @@ def createE():
 
 def lowest1(x,y):
 	#list for the potential edges to reveal
-	potentialedges = []
+	potentialEdges = []
 
 	#if the points above, below, to the left, and right are not yet counted, adds the connecting edges to the list
 	if vertexlist[x+1][y].counted == False:
@@ -48,6 +48,7 @@ def lowest1(x,y):
 		potentialEdges.append(((x,y),(x,y+1)))
 	if vertexlist[x][y-1].counted == False:
 		potentialEdges.append(((x,y),(x,y-1)))
+
 	#smallest is the best contendor for the lowest value. The first number is the index in the list potentialedges, the second number is the weight of the edge.
 	smallest = [0,1000]
 	for i in range(len(potentialEdges)):
@@ -82,6 +83,7 @@ def lowestAll():
 				smallest = new
 		except:
 			pass
+
 	#this should never be false, but in case there was a mistake and the lowestAll function is called to many times, this chould prevent the program from crashing
 	if smallest != [0,1000]:
 		#sets a and b to the x and y coordinates of the endpoint of the edge

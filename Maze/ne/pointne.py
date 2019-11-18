@@ -9,3 +9,4 @@ class point:
 	#returns the coordinates when a string is required. Used for debugging
 	def __str__(self):
 		return str((self.x,self.y))
+	
