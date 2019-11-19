@@ -8,7 +8,6 @@ import random
 #point is a class, similar to a tuple, but it also contains infomration on wether the point has already been counted, and if the point is part of the gutter
 from pointne import point
 from PIL import Image, ImageDraw
-from progressbar import progressbar as bar
 
 
 
@@ -141,7 +140,7 @@ def drawMaze(griddim,sizedim,name):
 	#counts the top left corner of the maze. This will allow the revealing process to start, beginning at the top left corner
 	vertexlist[1][1].counted = True
 	#Every point must be counted, so this reveals edges and counts points the same number of times as the total number of points. Since vertexlist is a two dimensional list, the total number of points is the width * height
-	for i in bar(range(len(vertexlist)*len(vertexlist[0]))):
+	for i in range(len(vertexlist)*len(vertexlist[0])):
 		lowest = lowestAll(vertexlist,edgedic)
 		if lowest != None:
 			#draws the edge that is returned by the lowestAll function
