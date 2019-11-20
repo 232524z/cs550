@@ -1,7 +1,7 @@
 #Ian
 #OMH
 #11/18/19
-#This program generates a random maze using prim's algorithm. Points are created in a grid throught the image, seperated by 1 pixel between each point. The weights for the connections between points are randomized, and put into a dictionary where the key is the start and endpoints of the connector. The image is drawn in conjunction with the calculations. I considered making a 2 dimensional list for the maze, and putting it into an image form at the end, but I found it much easier to work with an image file for the entire time.
+#This program generates a random maze using prim's algorithm. Points are created in a grid throught the image, seperated by 1 pixel between each point. The weights for the connections between points are randomized, and put into a dictionary where the key is the start and endpoints of the connector. The image is drawn in conjunction with the calculations. I considered making a 2 dimensional list for the maze, and putting it into an image form at the end, but I found it much easier to work with an image file for the entire time. In the original version, there was no boarder at the edge of the maze. When I showed my maze to some friends, They all suggested that I add a boarder around the maze so that it would look much more clean. I took the suggestion, and I am very happy with the results.
 #Sources:Spencer, Max Fan, https://www.tutorialspoint.com/python3/python_dictionary.htm, https://pillow.readthedocs.io/en/3.1.x/reference/Image.html
 
 import random
