@@ -85,6 +85,54 @@ megabyte - 1024 kilobyte
 
 
 
+----------------------------------------------------------------------
+12/12/19
+punchcards used for memory
+song ~ 5 MB
+5*1024*1024 = 5242880 bytes
+65,536 punch cards
+
+rgb picture
+246 levels
+3px by 3px
+8*3*3*3/8 = 27 bytes
+
+cmyk
+1024 levels
+3px by 3px
+10 bits * 9 pixels * 4 channels /8 = 45 bytes
+
+grayscale
+256 levels
+1000 by 1000
+8*1000*1000/8 = 1,000,000 bytes
+
+rgb
+512 levels
+1080 by 720
+3*9*1080*720/8 = 2,624,400 bytes
+
+cmyk
+450 levels
+3000 by 4000
+4*9*3000*4000/8 = 54,000,000 bytes
+
+
+3 bits per color
+3*4*11 + 40*2
+132 +80
+212 bits
+26.5 bytes
+
+
+
+
+
+
+
+
+
+
 
 
 
