@@ -1,0 +1,5 @@
+symmetry takes number
+if floornumber at 0 is number at -1
+give back yes
+
+shout symmetry taking 11

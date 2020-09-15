@@ -1,0 +1,20 @@
+Creativity and Design:
+project is unique
+project looks good (if applicable)
+project is creative
+
+Computational Thinking:
+Code is well organized
+variables and functions (and classes if applicable) are used
+Code is sufficiently sophisticated
+
+Communication:
+name, date, description, sources, and honor code ar included at the top of the project
+Description is thorough
+well commented, all functions have a brief description
+complicated portions of code are explained
+
+Resilient Learning:
+Utilized feedback from peers
+attempted to make improvements for final draft
+
